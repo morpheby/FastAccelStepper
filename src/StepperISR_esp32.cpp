@@ -106,6 +106,7 @@ int8_t StepperQueue::queueNumForStepPin(uint8_t step_pin) { return -1; }
 //*************************************************************************************************
 void StepperTask(void *parameter) {
   FastAccelStepperEngine *engine = (FastAccelStepperEngine *)parameter;
+  TickType_t tm = xTaskGetTickCount();
   while (true) {
     engine->manageSteppers();
 #if ESP_IDF_VERSION_MAJOR == 4
@@ -115,7 +116,7 @@ void StepperTask(void *parameter) {
 #endif
     const TickType_t delay_time =
         (engine->_delay_ms + portTICK_PERIOD_MS - 1) / portTICK_PERIOD_MS;
-    vTaskDelay(delay_time);
+    xTaskDelayUntil(&tm, delay_time);
   }
 }
 
