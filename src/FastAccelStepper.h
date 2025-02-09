@@ -168,7 +168,7 @@ class FastAccelStepperEngine {
   void setDebugLed(uint8_t ledPin);
 
   /* This should be only called from ISR or stepper task. So do not call it */
-  void manageSteppers();
+  virtual void manageSteppers();
 
  private:
   bool isDirPinBusy(uint8_t dirPin, uint8_t except_stepper);
