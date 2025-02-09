@@ -18,13 +18,11 @@ struct pcnt_chan_t {
   // remainder of struct not needed
 };
 
-bool FastAccelStepper::attachToPulseCounter(uint8_t unused_pcnt_unit,
-                                            int16_t low_value,
-                                            int16_t high_value) {
-  pcnt_unit_config_t config = {.low_limit = low_value,
-                               .high_limit = high_value,
+bool FastAccelStepper::attachToPulseCounter() {
+  pcnt_unit_config_t config = {.low_limit = INT16_MIN,
+                               .high_limit = INT16_MAX,
                                .intr_priority = 0,
-                               .flags = {.accum_count = 0}};
+                               .flags = {.accum_count = 1}};
   pcnt_unit_handle_t punit = NULL;
   esp_err_t rc;
   rc = pcnt_new_unit(&config, &punit);
@@ -126,7 +124,7 @@ void FastAccelStepper::clearPulseCounter() {
     pcnt_unit_clear_count(_attached_pulse_unit);
   }
 }
-int16_t FastAccelStepper::readPulseCounter() {
+int32_t FastAccelStepper::readPulseCounter() {
   int value = 0;
   if (pulseCounterAttached()) {
     pcnt_unit_get_count(_attached_pulse_unit, &value);
