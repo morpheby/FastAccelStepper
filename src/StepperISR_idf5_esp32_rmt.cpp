@@ -332,7 +332,8 @@ void StepperQueue::startQueue_rmt() {
 #endif
 }
 void StepperQueue::forceStop_rmt() {
-  rmt_disable(channel);
+  if (_channel_enabled)
+    rmt_disable(channel);
   _channel_enabled = false;
   _isRunning = false;
   _rmtStopped = true;
